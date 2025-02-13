@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Controller;
+use App\Models\Barang;
+use App\Models\Penjualan;
 use Illuminate\Http\Request;
 
 class PenjualanController extends Controller
@@ -14,6 +17,8 @@ class PenjualanController extends Controller
     public function index()
     {
         //
+        $penjualans = Penjualan::with(['barang', 'user'])->paginate(10);
+        return view('penjualan.index', compact('penjualans'));
     }
 
     /**
@@ -24,6 +29,8 @@ class PenjualanController extends Controller
     public function create()
     {
         //
+        $barangs = Barang::all();
+        return view('penjualan.create', compact('barangs'));
     }
 
     /**
@@ -35,6 +42,26 @@ class PenjualanController extends Controller
     public function store(Request $request)
     {
         //
+        $request->validate([
+            'id_barang' => 'required|exists:barangs,id',
+            'jumlah' => 'required|integer|min:1',
+        ]);
+
+        $barangs = Barang::findOrFail($request->id_barang);
+
+        if ($barangs->stok < $request->jumal) {
+            return redirect()->back()->with(['error' => 'stok tidak mecukupi']);
+        }
+
+        $barangs->decrement('stok', $request->jumlah);
+
+        Penjualan::create([
+            'id_user' => auth()->id(),
+            'id_barang' => $request->id_barang,
+            'jumlah' => $request->jumlah,
+        ]);
+
+        return redirect()->route('penjualan.index')->with(['success' => 'Data Berhasil Dicatat']);
     }
 
     /**
@@ -46,6 +73,8 @@ class PenjualanController extends Controller
     public function show($id)
     {
         //
+        $penjualan = Penjualan::with(['barang', 'user'])->findOrFail($id);
+        return view('penjualan.show', compact('penjualan'));
     }
 
     /**
@@ -57,6 +86,7 @@ class PenjualanController extends Controller
     public function edit($id)
     {
         //
+        
     }
 
     /**

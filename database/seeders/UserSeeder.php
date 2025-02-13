@@ -15,7 +15,7 @@ class UserSeeder extends Seeder
      */
     public function run()
     {
-        //
+        //eloquent
         User::create([
             'name' => 'Admin',
             'email' => 'admin@gmail.com',

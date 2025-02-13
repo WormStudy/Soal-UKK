@@ -15,7 +15,7 @@ class BarangSeeder extends Seeder
      */
     public function run()
     {
-        //
+        //eloquent
         Barang::create(['nama_barang' => 'Barang A', 'Stok' => 10, 'harga' => 10000]);
         Barang::create(['nama_barang' => 'Barang B', 'Stok' => 100, 'harga' => 50000]);
         Barang::create(['nama_barang' => 'Barang C', 'Stok' => 1000, 'harga' => 30000]);

@@ -16,6 +16,6 @@ class Penjualan extends Model
     }
 
     public function user() {
-        return $this->belongsTo(User::class, 'id_user');
+        return $this->belongsTo(User::class, 'id_user')->withDefault(['name' => 'User Deleted']);
     }
 }
